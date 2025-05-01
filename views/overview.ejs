@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Overview</title>
+    <link rel="stylesheet" href="/styles.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+</head>
+<body id = "bodySearch">
+  <header>
+    <h1 class = "headerTitle">TheMovieWiki</h1>
+    <nav class="navbar navbar-expand-lg navbar-dark">
+      <div class="container d-flex flex-column align-items-center">
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" href="/">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/trending">Trending</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/searchMovie">Search</a>
+          </li>
+      
+        <li class="nav-item">
+            <a class="nav-link" href="#">Write Your Reviews</a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link" href="/filmQuiz">Test Your Knowledge</a>
+          </li>
+          
+        </ul>
+      </div>
+    </div>
+    </nav>
+  </header>
+  <div class="customizeDiv">
+
+
+
+
+
+  
+    <h1 id ="movieTitle"><%= movie.title %></h1>
+    <div class="container mt-4">
+      <div class="row">
+    
+    <div class="col-md-4 text-center">
+   <img id = "posterPic" src="https://image.tmdb.org/t/p/w200<%= movie.poster_path %>" width ="285" height = "315"> 
+    </div>
+    <div class="col-md-8">
+    <% if (trailer) { %>
+       <iframe width="535" height="315"
+        src="https://www.youtube.com/embed/<%= trailer.key %>"
+        frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen>
+      </iframe>
+     
+    <% } else { %>
+      No trailer found.
+    <% } %>
+  </div>
+  </div>
+  </div>
+
+
+    <br>
+    <b>Director:</b>
+    <% if (director) { %>
+      <%= director.name %>
+    <% } else { %>
+      No Director found.
+    <% } %>
+    <br>
+    <b>Release Date:</b>
+    <%=movie.release_date %>
+    <br>
+    <b>Revenue:</b>
+   $<%=movie.revenue.toLocaleString()%>
+    <br>
+    <b>Budget:</b>
+    $<%=movie.budget.toLocaleString()%>
+    <br>
+    <b>Runtime:</b>
+    <%=movie.runtime%> minutes
+    <br>
+    <b>Genre:</b>
+    <% for (let i = 0; i < movie.genres.length; i++) { %>
+        <%= movie.genres[i].name %>,
+      <% } %>
+    <br>
+
+    <b>Cast:</b>
+    <% for (let i = 0; i < Math.min(15,cast.length); i++) { %>
+        <%= cast[i].name%> - <%= cast[i].character%>,
+      <% } %> ...
+    <br>
+    <br>
+
+    <b>Summary:</b>
+    <article><%= movie.overview %></article>
+
+    <br>
+    <b>TMDB Voter Rating:</b>
+    <% if (director) { %>
+    <%= movie.vote_average %>/10
+    <% } else { %>
+      No TMDB Rating found
+    <% } %>
+    <br>
+    <br>
+    <br>
+    <hr>
+    <b>Reviews: </b>
+    <br>
+    <br>
+    <% if (reviews && reviews.length > 0) { %>
+      <% for (let i = 0; i < reviews.length; i++) { %>
+        <h5><%= reviews[i].author %></h5>
+        <p><%= reviews[i].content %></p>
+        <small>Written on: <%= reviews[i].created_at %></small>
+        <hr>
+      <% } %>
+    <% } else { %>
+      <p>No reviews found.</p>
+    <% } %>
+      <br>
+      <b>Recommendations:</b>
+      <br>
+      <% if (recommendations && recommendations.length > 0) { %>
+        <% for (let i = 0; i <  Math.min(4,recommendations.length); i++) { %>
+          <% let rec = recommendations[i]; %>
+          <div id ="recSlots">
+            <h5 class = "movieTitle"><%= rec.title %></h5>
+            <% if (rec.poster_path) { %>
+              <a href="/movie/<%=rec.id %>">
+                <img class = "movie-poster" src="https://image.tmdb.org/t/p/w200<%= rec.poster_path %>" alt="<%= movie.title %> poster">
+              </a>
+              <% } else { %>
+                <p>No poster available</p>
+              <% } %>
+            
+          </div>
+        <% } %>
+      <% } else { %>
+        <p>No recommendations found.</p>
+      <% } %>
+    </div>
+</body>
+</html>
