@@ -3,6 +3,7 @@ import bcrypt from 'bcrypt';
 import session from 'express-session';
 import fetch from 'node-fetch';
 import he from 'he';
+import mysql from 'mysql2/promise';
 
 
 
@@ -22,6 +23,16 @@ app.use(session({
   resave: false,
   saveUninitialized: true
 }))
+
+//Database stuff - Krisztian
+
+const pool = mysql.createPool({
+host:"krnagy.site",
+user: "krnagysi_Admin",
+password: "1#67Mm.L}SC#",
+database: "krnagysi_MovieDB"
+})
+
 
 
 
@@ -129,7 +140,9 @@ app.post('/filmQuiz', async(req, res) => {
 
 });
 
-
+/*app.get('/dbTest', async (req,res) =>{
+  
+})*/
 
 
 app.listen(3000, () => {
