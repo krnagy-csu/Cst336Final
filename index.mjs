@@ -140,9 +140,9 @@ app.post('/filmQuiz', async(req, res) => {
 
 });
 
-/*app.get('/dbTest', async (req,res) =>{
-  
-})*/
+app.get('/signIn', (req,res) =>{
+  res.render('signInPage.ejs');
+})
 
 
 app.listen(3000, () => {

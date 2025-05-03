@@ -107,20 +107,25 @@
 
     <b>Summary:</b>
     <article><%= movie.overview %></article>
-
     <br>
+    <br>
+    <br>
+    <br>
+    <hr>
+    <h2><b>Our Users' Score: 5/5</b></h2>
+    <hr>
+    <h2><b>Our Users' Reviews:</b></h2>
+    <i>No reviews found.</i>
+    <hr>
     <b>TMDB Voter Rating:</b>
     <% if (director) { %>
     <%= movie.vote_average %>/10
     <% } else { %>
       No TMDB Rating found
     <% } %>
-    <br>
-    <br>
-    <br>
     <hr>
-    <b>Reviews: </b>
-    <br>
+    <h2><b>TMDB Reviews: </b></h2> <br>
+
     <br>
     <% if (reviews && reviews.length > 0) { %>
       <% for (let i = 0; i < reviews.length; i++) { %>
