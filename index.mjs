@@ -30,10 +30,12 @@ const pool = mysql.createPool({
 host:"krnagy.site",
 user: "krnagysi_Admin",
 password: "1#67Mm.L}SC#",
-database: "krnagysi_MovieDB"
+database: "krnagysi_MovieDB",
+connectionLimit : 10,
+waitForConnections: true
 })
 
-
+const conn = await pool.getConnection();
 
 
 let API_KEY = '8e45b8b65e45477be92c88c380ddd965';
@@ -137,11 +139,17 @@ app.post('/filmQuiz', async(req, res) => {
   }
 
   res.render('quizResults.ejs', {score, total})
-
+  
 });
 
 app.get('/signIn', (req,res) =>{
   res.render('signInPage.ejs');
+})
+
+app.get('/teams', async (req,res) =>{
+  let sql = `SELECT * FROM Teams ORDER BY Score desc`;
+  const [rows] = await conn.query(sql);
+  res.render('teamPage.ejs', {rows});
 })
 
 
