@@ -167,13 +167,13 @@ app.post('/signIn', async (req, res) => {
 
   let sql = `SELECT *
               FROM User
-              WHERE username = ?`;
+              WHERE Username = ?`;
     const [rows] = await conn.query(sql, [username]); 
     
     
    
   if(rows.length > 0){
-    if(password === rows[0].password){
+    if(password === rows[0].Password){
      req.session.userAuthenticated = true;
      res.render('home.ejs');
     }else{
