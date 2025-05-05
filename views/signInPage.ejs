@@ -10,8 +10,30 @@
 </head>
 <body class ="searchBody">
     <%-include ('partials/navbar.ejs')%>
-    <form action = "/signUp" method="POST">
 
+<div class="loginFin">
+  <div id="login">
+    <form action = "/signIn" method="POST">
+    <h1 id="loginHeader">Login</h1>
+
+        <div class="loginContainer">
+            <div class="loginText">Username: </div>
+             <input type="text" name="username" class="loginInput"><br><br>
+        </div>
+        <div class="loginContainer">
+            <div class="loginText">Password: </div>
+            <input type="password" name="password" class="loginInput"><br><br>
+        </div>
+     <button id="logBtn">Login</button>
     </form>
+</div>
+
+<br> <br>
+<% if (typeof(error) != "undefined"){ %>
+   <div style="color: red;"> <%=error %> </div>
+<% } %>
+
+</div>
+  
 </body>
 </html>
