@@ -41,6 +41,10 @@ const conn = await pool.getConnection();
 let API_KEY = '8e45b8b65e45477be92c88c380ddd965';
 
 app.get('/', (req, res) => {
+  res.render('signInPage.ejs')
+});
+
+app.get('/home', (req, res) => {
   res.render('home.ejs')
 });
 
@@ -146,11 +150,45 @@ app.get('/signIn', (req,res) =>{
   res.render('signInPage.ejs');
 })
 
+app.get('/logout', (req, res) => {
+  req.session.destroy();
+  res.render('signInPage.ejs');
+});
 app.get('/teams', async (req,res) =>{
   let sql = `SELECT * FROM Teams ORDER BY Score desc`;
   const [rows] = await conn.query(sql);
   res.render('teamPage.ejs', {rows});
 })
+
+app.post('/signIn', async (req, res) => {
+  let username = req.body.username;
+  let password = req.body.password;
+  
+
+  let sql = `SELECT *
+              FROM User
+              WHERE username = ?`;
+    const [rows] = await conn.query(sql, [username]); 
+    
+    
+   
+  if(rows.length > 0){
+    if(password === rows[0].password){
+     req.session.userAuthenticated = true;
+     res.render('home.ejs');
+    }else{
+      res.render('signInPage.ejs',{"error":"Wrong credentials!"});
+    }
+  }
+});
+
+function isAuthenticated(req, res, next){
+  if(req.session.userAuthenticated){
+     next();
+  }else{
+     res.redirect("/");
+  }
+}
 
 
 app.listen(3000, () => {

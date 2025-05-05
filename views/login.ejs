@@ -9,14 +9,15 @@
 </head>
 <body class ="searchBody">
   <%-include('partials/navbar.ejs')%>
-    
-    <div id = "searchPart">
+
+  <div id = "searchPart">
     <br>
     <form action="/search" method="POST">
         <input id = "searchBar" type="text" name="searchBar" placeholder="Enter movie title" required>
         <button type="submit" class="btn btn-light">Enter</button>
       </form>
-    </div>
+  </div>
+    
   
     
 </body>
