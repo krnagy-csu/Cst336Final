@@ -102,9 +102,15 @@ app.post('/search', async(req, res) => {
              INNER JOIN User u on r.UserID = u.UserID
              WHERE r.MovieName = ? AND r.MovieYear = ? AND r.Director = ?`;
   const [userReviews] = await conn.query(sql, [movieName, year, directorName]); 
+  const [avgReviews] = await conn.query(`SELECT Rating FROM Reviews WHERE MovieName = ? AND MovieYear = ? AND Director = ?`, [movieName, year, directorName]);
+  let avg = 0;
+  for (let rating of avgReviews){
+    avg += rating.Rating;
+  }
+  avg = (avg / avgReviews.length);
 
 
-  res.render('overview.ejs', { movie, cast, trailer, director, recommendations, reviews, userReviews});
+  res.render('overview.ejs', { movie, cast, trailer, director, recommendations, reviews, userReviews, avg});
   
 });
 
