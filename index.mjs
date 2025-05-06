@@ -45,7 +45,11 @@ app.get('/', (req, res) => {
 });
 
 app.get('/home', (req, res) => {
+  if (req.session == null){
+    res.redirect('/signIn');
+  } else {
   res.render('home.ejs')
+  }
 });
 
 //routes
@@ -129,7 +133,7 @@ for (let i = 0; i < data.results.length; i++) {
 app.post('/filmQuiz', async(req, res) => {
   let score = 0;
   let total = 0;
-
+  console.log(req.session);
  
   for (let i = 0; req.body[`question${i}`]; i++) {
     let userAnswer = req.body[`question${i}`];
@@ -141,23 +145,19 @@ app.post('/filmQuiz', async(req, res) => {
       score++;
     }
   }
-  if (req.session.teamID != null){
-    let sql = `SELECT TeamID FROM User WHERE UserId = ` + req.session.userID;
-    console.log(req.session.userID);
-    let [rows] = await conn.query(sql);
-    let teamID = rows[0].TeamID;
-    let sql2 = `UPDATE Teams SET Score = Score + ` + score + ` WHERE TeamID = ` + teamID;
-    console.log(sql2);
-    await conn.query(sql);
-    let sql3 = `SELECT Score FROM Teams WHERE TeamID = ` + teamID;
-    let [rows2] = await conn.query(sql);
-    let teamScore = rows2[0].Score;
-    console.log("Team score: " + teamScore);
-    res.render('quizResults.ejs', {score, total, teamScore})
-
-  } else{
-  res.render('quizResults.ejs', {score, total})
-  }
+  let sql = `SELECT TeamID FROM User WHERE UserId = ` + req.session.userID;
+  console.log(req.session.userID);
+  let [rows] = await conn.query(sql);
+  let teamID = rows[0].TeamID;
+  let sql2 = `UPDATE Teams SET Score = Score + ` + score + ` WHERE TeamID = ` + teamID;
+  console.log(sql2);
+  await conn.query(sql2);
+  let sql3 = `SELECT * FROM Teams WHERE TeamID = ` + teamID;
+  let [rows2] = await conn.query(sql3);
+  let team = rows2[0];
+  console.log(rows2)
+  console.log("Team score: " + team.Score);
+  res.render('quizResults.ejs', {score, total, team})
 });
 
 app.get('/signIn', (req,res) =>{
@@ -212,6 +212,7 @@ app.post('/signIn', async (req, res) => {
      req.session.userAuthenticated = true;
      req.session.username = username;
      req.session.userID = rows[0].UserID;
+     req.session.TeamID = rows[0].TeamID;
      //console.log(req.session.username);
      //console.log(req.session.userID);
      res.render('home.ejs',{rows, reviews});
