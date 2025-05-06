@@ -45,12 +45,21 @@ app.get('/', (req, res) => {
   res.render('signInPage.ejs',{thisSession})
 });
 
-app.get('/home', (req, res) => {
+app.get('/home', async (req, res) => {
   if (req.session == null){
     res.redirect('/signIn');
   } else {
   let thisSession = req.session;
-  res.render('home.ejs',{thisSession})
+  let sql = `SELECT *
+  FROM User
+  WHERE UserID = ?`;
+  const [rows] = await conn.query(sql, thisSession.userID); 
+  let sql2 = `SELECT *
+  FROM Reviews
+  WHERE UserID = ?`;
+  const [reviews] = await conn.query(sql2, thisSession.userID); 
+
+  res.render('home.ejs',{thisSession, rows, reviews})
   }
 });
 
@@ -186,7 +195,11 @@ app.get('/signIn', (req,res) =>{
 
 app.get('/logout', (req, res) => {
   req.session.destroy();
-  let thisSession = req.session;
+  let thisSession = {
+    "UserID" : undefined,
+    "Username" : undefined,
+    "Password" : undefined
+  };
   res.render('signInPage.ejs',{thisSession});
 });
 
@@ -257,7 +270,13 @@ app.get('/joinTeam', async (req,res) =>{
   await conn.query(sql,sqlParams);
   let users = conn.query(`SELECT * From Teams`);
   req.session.TeamID = teamID;
-  res.render('myTeam.ejs', {users,teamID,thisSession});
+  let thisSession = req.session;
+  res.redirect('/teams');
+})
+
+app.post('/submitReview', async (req,res) =>{
+  let thisSession = req.query.session;
+
 })
 
 function isAuthenticated(req, res, next){

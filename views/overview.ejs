@@ -83,11 +83,20 @@
     <br>
     <hr>
     <h2>Have you seen this film? Write a review!</h2>
-    <form method="GET" action="/submitReview">
-      <textarea name="movieReview" rows = "5" cols = "75"></textarea>
+    <%if (thisSession.userID != undefined){%>
+    <form method="POST" action="/submitReview">
+      <input type="hidden" name="dir" value="<%=director%>">
+      <input type="hidden" name="year" value="<%=movie.release_date.split('-')[0]%>"> <br>
+      <input type="hidden" name="userID" value="<%=thisSession.userID%>">
+      <label><input type="number" name="rating" min="0" max="5" step=".5" value="0"> Rating</label> <br>
+      <textarea name="movieReview" rows = "5" cols = "75">
+      </textarea>
       <br>
       <button type="submit" class="btn btn-light">Enter</button>
     </form>
+    <%} else {%>
+      <h6><i>You must be logged in to write a review.</i></h6>
+    <%}%>
     <hr>
     <h2><b>Our Users' Score: <%=avg%>/5</b></h2>
     <hr>

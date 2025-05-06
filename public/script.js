@@ -1,12 +1,10 @@
 document.querySelector("#profileBtn").addEventListener("click", displayOptions);
 document.querySelector("#suggestionBtn").addEventListener("click", suggestPassword);
 document.querySelector("#lengthCheck").addEventListener("submit", validateLength);
-alert("JS active");
 
 function validateLength(e){
     console.log("validation function fired");
     let password = document.querySelector("input[name=Password]").value;
-    alert(password);
     let errorMessage = document.querySelector("#errorMessage")
     if(password.length < 8){
         e.preventDefault();
