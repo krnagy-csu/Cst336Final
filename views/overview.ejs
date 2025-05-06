@@ -85,12 +85,13 @@
     <h2>Have you seen this film? Write a review!</h2>
     <%if (thisSession.userID != undefined){%>
     <form method="POST" action="/submitReview">
-      <input type="hidden" name="dir" value="<%=director%>">
+      <input type="hidden" name="dir" value="<%=director.name%>">
       <input type="hidden" name="year" value="<%=movie.release_date.split('-')[0]%>"> <br>
+      <input type="hidden" name="movieName" value="<%=movie.title%>">
       <input type="hidden" name="userID" value="<%=thisSession.userID%>">
+      <input type="hidden" name="movieID" value="<%=movieId%>">
       <label><input type="number" name="rating" min="0" max="5" step=".5" value="0"> Rating</label> <br>
-      <textarea name="movieReview" rows = "5" cols = "75">
-      </textarea>
+      <textarea name="movieReview" rows = "5" cols = "75"></textarea>
       <br>
       <button type="submit" class="btn btn-light">Enter</button>
     </form>
@@ -108,7 +109,7 @@
         <h5><%= userReviews[i].Username %></h5>
         <p><%= userReviews[i].Rating%>/5</p>
         <p><%= userReviews[i].Review %></p>
-        <small>Written on: <%= userReviews[i].Timestamp %></small>
+        <small>Written on: <%= userReviews[i].Timestamp.toISOString().slice(0,10) %></small>
         <hr>
       <% } %>
     <% } else { %>
@@ -131,7 +132,7 @@
       <% for (let i = 0; i < reviews.length; i++) { %>
         <h5><%= reviews[i].author %></h5>
         <p><%= reviews[i].content %></p>
-        <small>Written on: <%= reviews[i].created_at %></small>
+        <small>Written on: <%= reviews[i].created_at.slice(0,10) %></small>
         <hr>
       <% } %>
     <% } else { %>

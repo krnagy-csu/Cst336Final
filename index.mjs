@@ -120,9 +120,9 @@ app.post('/search', async(req, res) => {
     avg += rating.Rating;
   }
   avg = (avg / avgReviews.length);
-
+  
   let thisSession = req.session;
-  res.render('overview.ejs', { movie, cast, trailer, director, recommendations, reviews, userReviews, avg, thisSession});
+  res.render('overview.ejs', { movie, cast, trailer, director, recommendations, reviews, userReviews, avg, thisSession, movieId});
   
 });
 
@@ -275,8 +275,20 @@ app.get('/joinTeam', async (req,res) =>{
 })
 
 app.post('/submitReview', async (req,res) =>{
-  let thisSession = req.query.session;
-
+  let thisSession = req.session;
+  let Rating = req.body.rating;
+  let Review = req.body.movieReview;
+  let UserID = req.body.userID;
+  let Timestamp = new Date().toISOString();
+  let movieName = req.body.movieName;
+  let movieYear = req.body.year;
+  let director = req.body.dir;
+  let sqlParams = [Rating,Review,UserID,Timestamp,movieName,movieYear,director]
+  let sql = `INSERT INTO Reviews (Rating, Review, UserID, Timestamp, MovieName, MovieYear, Director)
+            VALUES (?,?,?,?,?,?,?);`
+  let result = await conn.query(sql,[Rating,Review,UserID,Timestamp,movieName,movieYear,director]);
+  console.log(result)
+  res.redirect('/movie/'+req.body.movieID)
 })
 
 function isAuthenticated(req, res, next){

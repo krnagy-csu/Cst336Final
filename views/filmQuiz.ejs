@@ -9,7 +9,7 @@
 <body id = "bodySearch">
   <%-include('partials/navbar.ejs')%>
       <div class = "customizeQuiz">
-
+  <%if (thisSession.userID != undefined){%>
   <form action="/filmQuiz" method="POST">
 
     
@@ -38,6 +38,9 @@
 
   <button type="submit">Submit</button>
   </form>
+  <%} else {%>
+  <h1>You must be logged in to play the quiz.</h1>
+  <%}%>
 </div>
 </body>
 </html>
