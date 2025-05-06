@@ -80,11 +80,26 @@
     <br>
     <br>
     <br>
+    <a href="/addReview">Add Review?</a>
+    <br>
     <hr>
     <h2><b>Our Users' Score: 5/5</b></h2>
     <hr>
-    <h2><b>Our Users' Reviews:</b></h2>
-    <i>No reviews found.</i>
+    <h2><b>Our Users' Reviews:</b></h2><br>
+
+    <br>
+    <% if (userReviews && userReviews.length > 0) { %>
+      <% for (let i = 0; i < userReviews.length; i++) { %>
+        <h5><%= userReviews[i].Username %></h5>
+        <p><%= userReviews[i].Rating%>/5</p>
+        <p><%= userReviews[i].Review %></p>
+        <small>Written on: <%= userReviews[i].Timestamp %></small>
+        <hr>
+      <% } %>
+    <% } else { %>
+      <p>No reviews found.</p>
+    <% } %>
+
     <hr>
     <b>TMDB Voter Rating:</b>
     <% if (director) { %>
@@ -92,6 +107,7 @@
     <% } else { %>
       No TMDB Rating found
     <% } %>
+    <br>
     <hr>
     <h2><b>TMDB Reviews: </b></h2> <br>
 

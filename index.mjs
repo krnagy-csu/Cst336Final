@@ -69,12 +69,15 @@ app.post('/search', async(req, res) => {
 
   let response = await fetch(`https://api.themoviedb.org/3/movie/${movieId}?api_key=${API_KEY}`);
   let movie = await response.json();
+  let movieName = movie.title;
+  let year = movie.release_date.split('-')[0];
 
   let response2 = await fetch(`https://api.themoviedb.org/3/movie/${movieId}/credits?api_key=${API_KEY}`);
   let data2 = await response2.json();
   let cast = data2.cast;
   let crew = data2.crew;
   let director = crew.find(person => person.job === "Director");
+  let directorName = director.name;
 
   let response3 = await fetch(`https://api.themoviedb.org/3/movie/${movieId}/videos?api_key=${API_KEY}`);
   let data3 = await response3.json();
@@ -90,9 +93,14 @@ app.post('/search', async(req, res) => {
   let data5 = await response5.json();
   let reviews = data5.results;
 
+  let sql = `SELECT r.*, u.Username
+             FROM Reviews r
+             INNER JOIN User u on r.UserID = u.UserID
+             WHERE r.MovieName = ? AND r.MovieYear = ? AND r.Director = ?`;
+  const [userReviews] = await conn.query(sql, [movieName, year, directorName]); 
 
 
-  res.render('overview.ejs', { movie, cast, trailer, director, recommendations, reviews});
+  res.render('overview.ejs', { movie, cast, trailer, director, recommendations, reviews, userReviews});
   
 });
 
