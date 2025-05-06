@@ -214,7 +214,6 @@ app.post('/signIn', async (req, res) => {
      req.session.userID = rows[0].UserID;
      console.log(req.session.username);
      console.log(req.session.userID);
-     res.render('home.ejs');
      res.render('home.ejs',{rows, reviews});
     }else{
       console.log("Error: password " + password + " != " + rows[0].Password);
