@@ -35,13 +35,13 @@
   </form>
 
     <br><br>
-
-    <div id="userReviews">
-      <%for(i of reviews){%>
-      <div class="reviews">
-        <%=i.MovieName%> <br>
-       Your rating: <%=i.Rating%>/5 <br>
-       <%=i.Review%> <br>
+    <h1>My Reviews:</h1>
+      <div id="userReviews" class="customizeQuiz">
+        <%for(i of reviews){%>
+        <div class="reviews">
+          <h3><%=i.MovieName%></h3> <br>
+        Your rating: <%=i.Rating%>/5 <br>
+        <%=i.Review%> <br>
         
       </div>
       <%}%>
