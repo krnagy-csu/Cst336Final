@@ -1,15 +1,19 @@
 document.querySelector("#profileBtn").addEventListener("click", displayOptions);
 document.querySelector("#suggestionBtn").addEventListener("click", suggestPassword);
 document.querySelector("#lengthCheck").addEventListener("submit", validateLength);
+alert("JS active");
 
 function validateLength(e){
-    let password = document.querySelector("#updatePassword").value;
+    console.log("validation function fired");
+    let password = document.querySelector("input[name=Password]").value;
+    alert(password);
     let errorMessage = document.querySelector("#errorMessage")
     if(password.length < 8){
         e.preventDefault();
         errorMessage.hidden = false;
         errorMessage.innerHTML = '<div>Password must be at least 8 characters long!</div>';
         errorMessage.style.color = "red";
+        console.log("Password too short");
     } else {
         errorMessage.hidden = true;
     }

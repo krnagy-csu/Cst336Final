@@ -198,8 +198,8 @@ app.post('/signIn', async (req, res) => {
               FROM User
               WHERE Username = ?`;
     const [rows] = await conn.query(sql, [username]); 
-    console.log(username);
-    console.log(rows);
+    //console.log(username);
+    //console.log(rows);
     
    
   if(rows.length > 0){
@@ -212,8 +212,8 @@ app.post('/signIn', async (req, res) => {
      req.session.userAuthenticated = true;
      req.session.username = username;
      req.session.userID = rows[0].UserID;
-     console.log(req.session.username);
-     console.log(req.session.userID);
+     //console.log(req.session.username);
+     //console.log(req.session.userID);
      res.render('home.ejs',{rows, reviews});
     }else{
       console.log("Error: password " + password + " != " + rows[0].Password);
@@ -224,9 +224,9 @@ app.post('/signIn', async (req, res) => {
 
 app.get('/joinTeam', async (req,res) =>{
   let teamID = req.query.teamId;
-  console.log(req.query.teamId);
-  console.log(req.session.username);
-  console.log(req.session.userID);
+  //console.log(req.query.teamId);
+  //console.log(req.session.username);
+  //console.log(req.session.userID);
   let sql = `UPDATE User SET TeamID = ` + teamID + ` WHERE UserID = ` + req.session.userID + `;`;
   let sqlParams = [`%${teamID}%`];
   await conn.query(sql,sqlParams);
