@@ -141,8 +141,19 @@ app.post('/filmQuiz', async(req, res) => {
       score++;
     }
   }
-
-  res.render('quizResults.ejs', {score, total})
+  if (req.session.userID != null){
+    let sql = `SELECT TeamID FROM User WHERE UserId = ` + req.session.userID;
+    console.log(req.session.userID);
+    let [rows] = await conn.query(sql);
+    teamID = rows[0].TeamID;
+    let sql2 = `UPDATE Teams SET Score = Score + ` + score + ` WHERE TeamID = ` + teamId;
+    console.log(sql2);
+    await conn.query(sql);
+    let sql3 = `SELECT Score FROM Teams WHERE TeamID = ` + teamId;
+    let [rows2] = await conn.query(sql);
+    teamScore = rows2[0].Score;
+  }
+  res.render('quizResults.ejs', {score, total, teamScore})
   
 });
 
@@ -154,6 +165,7 @@ app.get('/logout', (req, res) => {
   req.session.destroy();
   res.render('signInPage.ejs');
 });
+
 app.get('/teams', async (req,res) =>{
   let sql = `SELECT * FROM Teams ORDER BY Score desc`;
   const [rows] = await conn.query(sql);
@@ -169,18 +181,36 @@ app.post('/signIn', async (req, res) => {
               FROM User
               WHERE Username = ?`;
     const [rows] = await conn.query(sql, [username]); 
-    
+    console.log(username);
+    console.log(rows);
     
    
   if(rows.length > 0){
     if(password === rows[0].Password){
      req.session.userAuthenticated = true;
+     req.session.username = username;
+     req.session.userID = rows[0].UserID;
+     console.log(req.session.username);
+     console.log(req.session.userID);
      res.render('home.ejs');
     }else{
+      console.log("Error: password " + password + " != " + rows[0].Password);
       res.render('signInPage.ejs',{"error":"Wrong credentials!"});
     }
   }
 });
+
+app.get('/joinTeam', async (req,res) =>{
+  let teamID = req.query.teamId;
+  console.log(req.query.teamId);
+  console.log(req.session.username);
+  console.log(req.session.userID);
+  let sql = `UPDATE User SET TeamID = ` + teamID + ` WHERE UserID = ` + req.session.userID + `;`;
+  let sqlParams = [`%${teamID}%`];
+  await conn.query(sql,sqlParams);
+  const [users] = conn.query(`SELECT * From Teams`);
+  res.render('myTeam.ejs', {users,teamID});
+})
 
 function isAuthenticated(req, res, next){
   if(req.session.userAuthenticated){

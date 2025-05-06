@@ -15,7 +15,7 @@
         <%for (row of rows){%>
             <h3><%=row.Name%></h3>
             Quiz Points: <%=row.Score%> <br>
-            <a href="#" class = nav-link>Join</a> <br><hr>
+            <a href="/joinTeam?teamId=<%=row.TeamID%>" class = nav-link>Join</a> <br><hr>
         <%}%>
     </div>
 </body>
