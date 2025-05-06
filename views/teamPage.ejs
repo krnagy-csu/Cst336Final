@@ -10,14 +10,16 @@
 </head>
 <body class ="searchBody">
     <%-include('partials/navbar.ejs')%>
+
     <div class="customizeQuiz">
         <h1>Teams</h1> <hr>
         <%for (row of rows){%>
             <h3><%=row.Name%></h3>
             Quiz Points: <%=row.Score%> <br>
-            <%console.log(thisSession.userID)%>
             <%if (thisSession.userID != undefined){%>
-                <a href="/joinTeam?teamId=<%=row.TeamID%>" class = nav-link>Join</a>
+                <%if (thisSession.TeamID != row.TeamID){%><a href="/joinTeam?teamId=<%=row.TeamID%>" class = nav-link>Join</a><%} else {%>
+                    Joined<br>
+                <%}%>
             <%}%>
             <br><hr>
         <%}%>
