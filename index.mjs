@@ -172,6 +172,20 @@ app.get('/teams', async (req,res) =>{
   res.render('teamPage.ejs', {rows});
 })
 
+app.post('/updateUser', async(req,res) => {
+  let username = req.body.Username;
+  let password = req.body.Password;
+  let userId = req.body.UserId;
+
+  let sql = `UPDATE User
+              SET Username = ?,
+              password = ?
+              WHERE UserID = ?`;
+  let sqlParams = [username, password,userId];
+  const [userInfo] = await conn.query(sql, sqlParams);
+  res.redirect('/');
+});
+
 app.post('/signIn', async (req, res) => {
   let username = req.body.username;
   let password = req.body.password;
@@ -187,12 +201,18 @@ app.post('/signIn', async (req, res) => {
    
   if(rows.length > 0){
     if(password === rows[0].Password){
+      let userId = rows[0].UserID;
+      let sql2 = `SELECT *
+                  FROM Reviews
+                  WHERE UserID = ?`;
+      const [reviews] = await conn.query(sql2, [userId]); 
      req.session.userAuthenticated = true;
      req.session.username = username;
      req.session.userID = rows[0].UserID;
      console.log(req.session.username);
      console.log(req.session.userID);
      res.render('home.ejs');
+     res.render('home.ejs',{rows, reviews});
     }else{
       console.log("Error: password " + password + " != " + rows[0].Password);
       res.render('signInPage.ejs',{"error":"Wrong credentials!"});
