@@ -141,20 +141,23 @@ app.post('/filmQuiz', async(req, res) => {
       score++;
     }
   }
-  if (req.session.userID != null){
+  if (req.session.teamID != null){
     let sql = `SELECT TeamID FROM User WHERE UserId = ` + req.session.userID;
     console.log(req.session.userID);
     let [rows] = await conn.query(sql);
-    teamID = rows[0].TeamID;
-    let sql2 = `UPDATE Teams SET Score = Score + ` + score + ` WHERE TeamID = ` + teamId;
+    let teamID = rows[0].TeamID;
+    let sql2 = `UPDATE Teams SET Score = Score + ` + score + ` WHERE TeamID = ` + teamID;
     console.log(sql2);
     await conn.query(sql);
-    let sql3 = `SELECT Score FROM Teams WHERE TeamID = ` + teamId;
+    let sql3 = `SELECT Score FROM Teams WHERE TeamID = ` + teamID;
     let [rows2] = await conn.query(sql);
-    teamScore = rows2[0].Score;
+    let teamScore = rows2[0].Score;
+    console.log("Team score: " + teamScore);
+    res.render('quizResults.ejs', {score, total, teamScore})
+
+  } else{
+  res.render('quizResults.ejs', {score, total})
   }
-  res.render('quizResults.ejs', {score, total, teamScore})
-  
 });
 
 app.get('/signIn', (req,res) =>{
@@ -228,7 +231,8 @@ app.get('/joinTeam', async (req,res) =>{
   let sql = `UPDATE User SET TeamID = ` + teamID + ` WHERE UserID = ` + req.session.userID + `;`;
   let sqlParams = [`%${teamID}%`];
   await conn.query(sql,sqlParams);
-  const [users] = conn.query(`SELECT * From Teams`);
+  let users = conn.query(`SELECT * From Teams`);
+  req.session.TeamID = teamID;
   res.render('myTeam.ejs', {users,teamID});
 })
 
