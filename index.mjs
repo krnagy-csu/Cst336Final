@@ -41,20 +41,23 @@ const conn = await pool.getConnection();
 let API_KEY = '8e45b8b65e45477be92c88c380ddd965';
 
 app.get('/', (req, res) => {
-  res.render('signInPage.ejs')
+  let thisSession = req.session;
+  res.render('signInPage.ejs',{thisSession})
 });
 
 app.get('/home', (req, res) => {
   if (req.session == null){
     res.redirect('/signIn');
   } else {
-  res.render('home.ejs')
+  let thisSession = req.session;
+  res.render('home.ejs',{thisSession})
   }
 });
 
 //routes
 app.get('/searchMovie', (req, res) => {
-   res.render('login.ejs')
+  let thisSession = req.session;
+   res.render('login.ejs', {thisSession})
 });
 
 app.post('/search', async(req, res) => {
@@ -63,8 +66,8 @@ app.post('/search', async(req, res) => {
     let response = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=${API_KEY}&query=${encodeURIComponent(searchBar)}`);
     let data = await response.json();
     let movies = data.results;
-
-    res.render('search.ejs', { movies });
+    let thisSession = req.session;
+    res.render('search.ejs', { movies , thisSession});
  });
 
 
@@ -109,8 +112,8 @@ app.post('/search', async(req, res) => {
   }
   avg = (avg / avgReviews.length);
 
-
-  res.render('overview.ejs', { movie, cast, trailer, director, recommendations, reviews, userReviews, avg});
+  let thisSession = req.session;
+  res.render('overview.ejs', { movie, cast, trailer, director, recommendations, reviews, userReviews, avg, thisSession});
   
 });
 
@@ -119,7 +122,8 @@ app.get('/trending', async(req, res) => {
   let data = await response.json();
   let trending = data.results;
   console.log(trending)
-  res.render('trendingMovies.ejs' , {trending})
+  let thisSession = req.session;
+  res.render('trendingMovies.ejs' , {trending, thisSession})
 });
 
 app.get('/filmQuiz', async(req, res) => {
@@ -140,8 +144,8 @@ for (let i = 0; i < data.results.length; i++) {
 }
 }
   console.log(quizData)
-  res.render('filmQuiz.ejs' , {quizData})
-
+  let thisSession = req.session;
+  res.render('filmQuiz.ejs' , {quizData,thisSession})
 });
 
 app.post('/filmQuiz', async(req, res) => {
@@ -171,16 +175,19 @@ app.post('/filmQuiz', async(req, res) => {
   let team = rows2[0];
   console.log(rows2)
   console.log("Team score: " + team.Score);
-  res.render('quizResults.ejs', {score, total, team})
+  let thisSession = req.session;
+  res.render('quizResults.ejs', {score, total, team, thisSession})
 });
 
 app.get('/signIn', (req,res) =>{
-  res.render('signInPage.ejs');
+  let thisSession = req.session;
+  res.render('signInPage.ejs',{thisSession});
 })
 
 app.get('/logout', (req, res) => {
   req.session.destroy();
-  res.render('signInPage.ejs');
+  let thisSession = req.session;
+  res.render('signInPage.ejs',{thisSession});
 });
 
 app.get('/teams', async (req,res) =>{
@@ -216,7 +223,8 @@ app.post('/signIn', async (req, res) => {
     //console.log(username);
     //console.log(rows);
     
-   
+    let thisSession = req.session;
+
   if(rows.length > 0){
     if(password === rows[0].Password){
       let userId = rows[0].UserID;
@@ -230,10 +238,11 @@ app.post('/signIn', async (req, res) => {
      req.session.TeamID = rows[0].TeamID;
      //console.log(req.session.username);
      //console.log(req.session.userID);
-     res.render('home.ejs',{rows, reviews});
+     
+     res.render('home.ejs',{rows, reviews,thisSession});
     }else{
       console.log("Error: password " + password + " != " + rows[0].Password);
-      res.render('signInPage.ejs',{"error":"Wrong credentials!"});
+      res.render('signInPage.ejs',{"error":"Wrong credentials!",thisSession});
     }
   }
 });
@@ -248,7 +257,7 @@ app.get('/joinTeam', async (req,res) =>{
   await conn.query(sql,sqlParams);
   let users = conn.query(`SELECT * From Teams`);
   req.session.TeamID = teamID;
-  res.render('myTeam.ejs', {users,teamID});
+  res.render('myTeam.ejs', {users,teamID,thisSession});
 })
 
 function isAuthenticated(req, res, next){

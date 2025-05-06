@@ -13,30 +13,30 @@
   <form action="/filmQuiz" method="POST">
 
     
-    <% for (let i = 0; i < quizData.length; i++) { 
-         let q = quizData[i];
-         let options = [q.correct_answer, ...q.incorrect_answers];
-         options.sort(() => Math.random() - 0.5); 
-    %>
+  <% for (let i = 0; i < quizData.length; i++) { 
+    let q = quizData[i];
+    let options = [q.correct_answer, ...q.incorrect_answers];
+    options.sort(() => Math.random() - 0.5); 
+  %>
 
      
-        <b>Q<%= i + 1 %>: <%= q.question %></b><br>
+    <b>Q<%= i + 1 %>: <%= q.question %></b><br>
 
-        <% for (let j = 0; j < options.length; j++) { %>
-          <label>
-            <input type="radio" name="question<%= i %>" value="<%= options[j] %>">
-            <%= options[j] %>
-          </label><br>
-        <% } %>
+    <% for (let j = 0; j < options.length; j++) { %>
+      <label>
+        <input type="radio" name="question<%= i %>" value="<%= options[j] %>">
+        <%= options[j] %>
+      </label><br>
+    <% } %>
           
-        <input type="hidden" name="correct<%= i %>" value="<%= q.correct_answer %>">
+    <input type="hidden" name="correct<%= i %>" value="<%= q.correct_answer %>">
         
-        <hr>
+    <hr>
       
 
-    <% } %>
+  <% } %>
 
-    <button type="submit">Submit</button>
+  <button type="submit">Submit</button>
   </form>
 </div>
 </body>
