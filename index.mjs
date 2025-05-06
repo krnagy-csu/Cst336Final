@@ -154,11 +154,26 @@ app.get('/logout', (req, res) => {
   req.session.destroy();
   res.render('signInPage.ejs');
 });
+
 app.get('/teams', async (req,res) =>{
   let sql = `SELECT * FROM Teams ORDER BY Score desc`;
   const [rows] = await conn.query(sql);
   res.render('teamPage.ejs', {rows});
 })
+
+app.post('/updateUser', async(req,res) => {
+  let username = req.body.Username;
+  let password = req.body.Password;
+  let userId = req.body.UserId;
+
+  let sql = `UPDATE User
+              SET Username = ?,
+              password = ?
+              WHERE UserID = ?`;
+  let sqlParams = [username, password,userId];
+  const [userInfo] = await conn.query(sql, sqlParams);
+  res.redirect('/');
+});
 
 app.post('/signIn', async (req, res) => {
   let username = req.body.username;
@@ -174,8 +189,13 @@ app.post('/signIn', async (req, res) => {
    
   if(rows.length > 0){
     if(password === rows[0].Password){
+      let userId = rows[0].UserID;
+      let sql2 = `SELECT *
+                  FROM Reviews
+                  WHERE UserID = ?`;
+      const [reviews] = await conn.query(sql2, [userId]); 
      req.session.userAuthenticated = true;
-     res.render('home.ejs');
+     res.render('home.ejs',{rows, reviews});
     }else{
       res.render('signInPage.ejs',{"error":"Wrong credentials!"});
     }
