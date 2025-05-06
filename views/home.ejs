@@ -36,12 +36,15 @@
 
     <br><br>
     <h1>My Reviews:</h1>
+
       <div id="userReviews" class="customizeQuiz">
+        <hr>
         <%for(i of reviews){%>
         <div class="reviews">
           <h3><%=i.MovieName%></h3> <br>
         Your rating: <%=i.Rating%>/5 <br>
         <%=i.Review%> <br>
+        <hr>
         
       </div>
       <%}%>
