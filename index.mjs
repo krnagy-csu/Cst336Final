@@ -186,7 +186,8 @@ app.get('/logout', (req, res) => {
 app.get('/teams', async (req,res) =>{
   let sql = `SELECT * FROM Teams ORDER BY Score desc`;
   const [rows] = await conn.query(sql);
-  res.render('teamPage.ejs', {rows});
+  let thisSession = req.session;
+  res.render('teamPage.ejs', {rows,thisSession});
 })
 
 app.post('/updateUser', async(req,res) => {
