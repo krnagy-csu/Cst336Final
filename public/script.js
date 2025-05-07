@@ -18,10 +18,10 @@ function validateLength(e){
 }
 
 function getUsernameFromHeading() {
-    let welcomeHeading = document.querySelector("h2");
+    let welcomeHeading = document.querySelector("#userName");
     if (welcomeHeading) {
       let usernameText = welcomeHeading.textContent.trim();
-      return usernameText.replace("Welcome ", "").replace("!", "");
+      return usernameText;
     }
     return ""; 
   }
