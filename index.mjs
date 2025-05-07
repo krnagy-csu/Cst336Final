@@ -193,6 +193,11 @@ app.get('/signIn', (req,res) =>{
   res.render('signInPage.ejs',{thisSession});
 })
 
+app.get('/signUp', (req, res) =>{
+  let thisSession = req.session;
+  res.render('signUpPage.ejs',{thisSession});
+})
+
 app.get('/logout', (req, res) => {
   req.session.destroy();
   let thisSession = {
@@ -289,6 +294,27 @@ app.post('/submitReview', async (req,res) =>{
   let result = await conn.query(sql,[Rating,Review,UserID,Timestamp,movieName,movieYear,director]);
   console.log(result)
   res.redirect('/movie/'+req.body.movieID)
+})
+
+app.post('/createAcct', async (req,res) =>{
+  let thisSession = req.session;
+  const [rows] = await conn.query(`SELECT Username FROM User`)
+  let usernameTaken = false;
+  for (let row of rows){
+    if (row.Username == req.body.username){
+      usernameTaken = true;
+    }
+  }
+  console.log(usernameTaken);
+  if (usernameTaken){
+    res.render('signUpPage.ejs',{thisSession,"error":"Username taken!"});
+  } else{
+    let sql = `INSERT INTO User (Username, Password, Admin, TeamID)
+    VALUES (?,?,0,0);`;
+    let params = [req.body.username, req.body.password];
+    await conn.query(sql,params);
+    res.redirect('/')
+  }
 })
 
 function isAuthenticated(req, res, next){

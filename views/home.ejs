@@ -13,7 +13,7 @@
 
   <br>
 
-  <h2> Welcome <%=rows[0].Username%>!</h2>
+  <h2 id="homeTitle"> Welcome, <span id="userName"><%=rows[0].Username%>!</span></h2>
 
   <div id="userOptions">
     <div id="editUser">
@@ -33,8 +33,9 @@
     <div id="errorMessage" hidden></div>
     <button type="submit">Update Profile</button>
   </form>
+  <hr>
 
-    <br><br>
+    <br><br><br><br>
     <h1>My Reviews:</h1>
 
       <div id="userReviews" class="customizeQuiz">
