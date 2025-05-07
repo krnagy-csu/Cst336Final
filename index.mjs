@@ -183,7 +183,7 @@ app.post('/filmQuiz', async(req, res) => {
   let [rows2] = await conn.query(sql3);
   let team = rows2[0];
   console.log(rows2)
-  console.log("Team score: " + team.Score);
+  //console.log("Team score: " + team.Score);
   let thisSession = req.session;
   res.render('quizResults.ejs', {score, total, team, thisSession})
 });

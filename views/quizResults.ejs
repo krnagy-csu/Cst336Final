@@ -13,7 +13,7 @@
       </header>
       <div class = "customizeQuiz">
     <h1>You scored <%= score %>/<%= total%></h1>
-    <% if((typeof teamscore !== undefined)){ %>
+    <% if((team && typeof teamscore !== undefined)){ %>
       <h3>Team <%=team.Name%>'s score is now: <%=team.Score%></h3>
     <% } %>
 </div>
